@@ -1,7 +1,6 @@
+(function(document){
 
-$(function(){
-
-  var words = {
+  let words = {
     " ": "Space",
     "A": "Alfa",
     "B": "Bravo",
@@ -41,29 +40,42 @@ $(function(){
     "0": "Zero",
   };
 
+  let raw = document.querySelector("#raw");
+
   function refresh(){
-    $('#spelling').empty();
+    let spelling = document.querySelector("#spelling");
+    spelling.replaceChildren();
 
-    var input = $('#raw').val();
+    let input = raw.value;
 
-    for (var i = 0; i < input.length; i++) {
-      var c = input.charAt(i).toUpperCase();
-      var text = words[c] || '-';
+    for (let i = 0; i < input.length; i++) {
+      let c = input.charAt(i).toUpperCase();
+      let text = words[c] || '-';
       if (c == ' ') {
-        c = '&nbsp;';
+        c = ' '; // non-breaking space
       }
-      var row = $('<div class="row"></div>');
-      $('<div class="letter"></div>').html(c).appendTo(row);
-      $('<div class="word"></div>').html(text).appendTo(row);
-      row.appendTo('#spelling');
+
+      let row = document.createElement('div');
+      row.className = 'row';
+
+      let letter = document.createElement('div');
+      letter.className = 'letter';
+      letter.textContent = c;
+
+      let word = document.createElement('div');
+      word.className = 'word';
+      word.textContent = text;
+
+      row.append(letter, word);
+      spelling.append(row);
     }
   };
 
-  $('#raw')
-  .keydown(refresh)
-  .keyup(refresh)
-  .change(refresh)
-  .focus();
+  raw.addEventListener('keydown', refresh);
+  raw.addEventListener('keyup', refresh);
+  raw.addEventListener('change', refresh);
+
+  raw.focus();
 
   refresh();
-});
+})(document);
